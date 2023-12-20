@@ -57,15 +57,6 @@ impl FromStr for Game {
         for subset in subsets {
             result.cubes.push(NumberOfEach::from_str(subset).unwrap());
         }
-        //result.cubes = part_iter
-        //    .next()
-        //    .unwrap_or("0 red, 0 green, 0 blue")
-        //    .split("; ")
-        //    .map(|string| {
-        //        NumberOfEach::from_str(string)
-        //            .unwrap_or(NumberOfEach::default())
-        //    })
-        //    .collect::<Vec<NumberOfEach>>();
         Ok(result)
     }
 }
