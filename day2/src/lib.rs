@@ -1,4 +1,4 @@
-use std::str::FromStr;
+use std::{str::FromStr, usize};
 
 const MAX_RED: usize = 12;
 const MAX_GREEN: usize = 13;
@@ -84,5 +84,27 @@ pub fn part_1(input: &str) -> usize {
                 )
         )
         .map(|game| game.id)
+        .sum::<usize>()
+}
+
+pub fn part_2(input: &str) -> usize {
+    input
+        .lines()
+        .map(|line| {
+            let mut game = Game::from_str(line).unwrap();
+            let mut min_number_of_each = game.cubes.pop().unwrap();
+            for number_of_each in game.cubes {
+                if min_number_of_each.red < number_of_each.red {
+                    min_number_of_each.red = number_of_each.red;
+                }
+                if min_number_of_each.green < number_of_each.green {
+                    min_number_of_each.green = number_of_each.green;
+                }
+                if min_number_of_each.blue < number_of_each.blue {
+                    min_number_of_each.blue = number_of_each.blue;
+                }
+            }
+            min_number_of_each.red * min_number_of_each.blue * min_number_of_each.green
+        })
         .sum::<usize>()
 }
