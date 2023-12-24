@@ -11,7 +11,7 @@ impl FromStr for Almanac {
     type Err = &'static str;
 
     fn from_str(line: &str) -> Result<Self, Self::Err> {
-        let mut ret_val = Almanac {
+        let ret_val = Almanac {
             seeds: 
                 line
                 .split_once(": ")
@@ -24,7 +24,6 @@ impl FromStr for Almanac {
             mappings:
                 Vec::new(),
         };
-        ret_val.seeds.sort_unstable();
         Ok(ret_val)
     }
 }
@@ -86,7 +85,7 @@ impl Mapping {
 
 pub fn part_1(input: &str) -> i64 {
     let mut lines_iter = input.lines();
-    let mut almanac = Almanac::from_str(lines_iter.next().unwrap()).unwrap(); //
+    let mut almanac = Almanac::from_str(lines_iter.next().unwrap()).unwrap();
 
     almanac.create_mappings(lines_iter);
 
@@ -98,6 +97,27 @@ pub fn part_1(input: &str) -> i64 {
             current_seed = map.apply_map(current_seed);
         }
         min = min.min(current_seed);
+    }
+
+    min
+}
+pub fn part_2(input: &str) -> i64 {
+    let mut lines_iter = input.lines();
+    let mut almanac = Almanac::from_str(lines_iter.next().unwrap()).unwrap(); 
+
+    almanac.create_mappings(lines_iter);
+
+    let mut min = i64::MAX;
+
+    for seed_range in almanac.seeds.chunks(2) {
+        for seed in seed_range[0]..seed_range[0]+seed_range[1] {
+            let mut current_seed = seed;
+
+            for map in &almanac.mappings {
+                current_seed = map.apply_map(current_seed);
+            }
+            min = min.min(current_seed);
+        }
     }
 
     min
