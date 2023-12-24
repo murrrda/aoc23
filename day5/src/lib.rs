@@ -81,6 +81,16 @@ impl Mapping {
 
         seed
     }
+    fn reverse_lookup(&self, val: i64) -> i64 {
+        for map in &self.map {
+            let rev = val - map.diff;
+            if map.range.contains(&rev) {
+                return rev;
+            }
+        }
+
+        val
+    }
 }
 
 pub fn part_1(input: &str) -> i64 {
@@ -107,8 +117,8 @@ pub fn part_2(input: &str) -> i64 {
 
     almanac.create_mappings(lines_iter);
 
+    /* slow solution
     let mut min = i64::MAX;
-
     for seed_range in almanac.seeds.chunks(2) {
         for seed in seed_range[0]..seed_range[0]+seed_range[1] {
             let mut current_seed = seed;
@@ -119,6 +129,26 @@ pub fn part_2(input: &str) -> i64 {
             min = min.min(current_seed);
         }
     }
+    return min;
+    */
 
-    min
+    let seed_ranges = almanac.seeds.chunks(2).map(|vec| Range {
+        start: vec[0],
+        end: vec[0] + vec[1],
+    }).collect::<Vec<_>>();
+
+    let mut location = 1 as i64;
+    loop {
+        let mut current_seed = location;
+
+        for map in almanac.mappings.iter().rev() {
+            current_seed = map.reverse_lookup(current_seed);
+        }
+        for sr in &seed_ranges {
+            if sr.contains(&current_seed) {
+                return location;
+            }
+        }
+        location += 1;
+    }
 }
