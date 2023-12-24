@@ -10,7 +10,7 @@ fn main() {
     println!(" -Time: {:?}", elapsed_1);
 
     let now_1 = Instant::now();
-    print!("Answer Part 1: {}", part_2(input));
+    print!("Answer Part 2: {}", part_2(input));
     let elapsed_1 = now_1.elapsed();
     println!(" -Time: {:?}", elapsed_1);
 }
