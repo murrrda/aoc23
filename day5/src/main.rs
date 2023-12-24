@@ -1,3 +1,7 @@
+use day5::part_1;
+
 fn main() {
-    println!("Hello, world!");
+    let input = include_str!("../input.txt");
+    println!("Answer Part 1: {}", part_1(input));
+    //println!("Answer Part 2: {}", part_2(input));
 }
