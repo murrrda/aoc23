@@ -44,29 +44,84 @@ fn form_races(times: Vec<i64>, distances: Vec<i64>) -> Vec<Race> {
     races
 }
 
+fn find_count_for_race(race: Race) -> i64 {
+    let x = find_roots_quadratic(1 as f64, -race.time as f64, race.distance as f64);
+    let mut count: i64 = 0;
+    
+    if let Roots::Two([first_el, second_el]) = x {
+        count = second_el.floor() as i64 - first_el.floor() as i64;
+    } else {
+        println!("Unexpected result");
+    }
+
+    count
+}
+
+fn parse_time(input: &str) -> i64 {
+    let num_vec: Vec<&str> =input
+        .lines()
+        .next()
+        .unwrap()
+        .split(":")
+        .nth(1)
+        .unwrap()
+        .trim()
+        .split_whitespace()
+        .collect();
+
+    let mut num_str = String::from("");
+    for num in num_vec {
+        num_str.push_str(num);
+    }
+
+    num_str.parse().unwrap()
+}
+
+fn parse_distance(input: &str) -> i64 {
+    let num_vec: Vec<&str> =input
+        .lines()
+        .nth(1)
+        .unwrap()
+        .split(":")
+        .nth(1)
+        .unwrap()
+        .trim()
+        .split_whitespace()
+        .collect();
+
+    let mut num_str = String::from("");
+    for num in num_vec {
+        num_str.push_str(num);
+    }
+
+    num_str.parse().unwrap()
+}
+
 pub fn part_1(input: &str) -> i64 {
     let times = read_times(input);
     let distances = read_distances(input);
-
     let races = form_races(times, distances);
-
     let mut counts: Vec<i64> = Vec::new();
 
     for race in races {
-        let x = find_roots_quadratic(1 as f64, -race.time as f64, race.distance as f64);
-        if let Roots::Two([first_el, second_el]) = x {
-            let count = second_el.floor() as i64 - first_el.floor() as i64;
-            counts.push(count);
-        } else {
-            println!("Unexpected result");
-        }
+        counts.push(find_count_for_race(race));
     }
 
     let mut ret_val: i64 = 1;
     for num in counts {
-        println!("{:?}", num);
         ret_val *= num;
     }
 
     return ret_val;
+}
+
+pub fn part_2(input: &str) -> i64 {
+    let time = parse_time(input);
+    let distance = parse_distance(input);
+    let race = Race {
+        time,
+        distance,
+    };
+
+    find_count_for_race(race)
 }
